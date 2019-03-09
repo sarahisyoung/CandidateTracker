@@ -1,5 +1,6 @@
 {
   "projects": {
-    "tracker": "candidatetracker-58223"
+    "tracker": "candidatetracker-58223",
+    "default": "candidatetracker-58223"
   }
 }

@@ -46,6 +46,8 @@ limitations under the License.
   <!-- If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
   <script src="/__/firebase/5.7.0/firebase-app.js"></script>
   <script src="/__/firebase/5.7.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
   <script src="/__/firebase/init.js"></script>
 
   <script type="text/javascript">
@@ -148,6 +150,14 @@ limitations under the License.
       // [END authstatelistener]
       document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
     }
+
+    function writeUserData() {
+      console.log("writing user data...")
+      firebase.database().ref('users/').set({
+        randomShit: "here is some random shit"
+      });
+    }
+
     window.onload = function() {
       initApp();
     };
@@ -178,6 +188,8 @@ limitations under the License.
 
           <!-- Button that handles sign-in/sign-out -->
           <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in">Sign in with Google</button>
+
+          <button id="database_test" onclick="writeUserData();">database test</button>
 
           <!-- Container where we'll display the user details -->
           <div class="quickstart-user-details-container">
