@@ -133,6 +133,11 @@ limitations under the License.
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
           document.getElementById('quickstart-sign-in').textContent = 'Sign out';
           document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+          var db = firebase.database();
+          var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+          reqCount.on('value', function(snapshot) {
+            document.getElementById('special_number').textContent = snapshot.val();
+          });
           // [END_EXCLUDE]
         } else {
           // User is signed out.
@@ -155,7 +160,8 @@ limitations under the License.
       var user = firebase.auth().currentUser;
       if (user) {
         firebase.database().ref('users/' + user.uid).set({
-          requirements: 543543543
+          requirements: 543543543,
+          email: user.email
         });
       }
     }
@@ -200,6 +206,8 @@ limitations under the License.
             <pre><code id="quickstart-account-details">null</code></pre>
             <div>Google OAuth Access Token:</div>
             <pre><code id="quickstart-oauthtoken">null</code></pre>
+            <div>Database Value: </div>
+            <pre><code id="special_number">null</code></pre>
           </div>
         </div>
       </div>
