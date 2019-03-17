@@ -23,6 +23,7 @@ limitations under the License.
 
 
   <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+
   <script>
     // Initialize Firebase
     var config = {
@@ -169,7 +170,20 @@ limitations under the License.
     window.onload = function() {
       initApp();
     };
+    function queryDatabase() {
+        var database = firebase.database();
+        var uid = firebase.auth().currentUser.uid;
+        var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+        reqCount.on('value', function(snapshot) {
+          document.getElementById('req').textContent = snapshot.val();
+        });
+        // document.getElementById("demo").innerHTML = firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
+        //     var username = (snapshot.val() && snapshot.val().requirements) || 'Anonymous';
+        // });
+        // console.log('called');
+    }
   </script>
+
 </head>
 <body>
 <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -198,7 +212,9 @@ limitations under the License.
           <button disabled class="mdl-button mdl-js-button mdl-button--raised" id="quickstart-sign-in">Sign in with Google</button>
 
           <button id="database_test" onclick="writeUserEmailData();">database test</button>
-
+          <button id="querytest" onclick="queryDatabase();">read test</button>
+          <h1>Test</h1>
+          <p id="req"></p>
           <!-- Container where we'll display the user details -->
           <div class="quickstart-user-details-container">
             Firebase sign-in status: <span id="quickstart-sign-in-status">Unknown</span>
