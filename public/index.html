@@ -74,9 +74,9 @@
 		          // This gives you a Google Access Token. You can use it to access the Google API.
 		          var token = result.credential.accessToken;
 		          // [START_EXCLUDE]
-		          document.getElementById('quickstart-oauthtoken').textContent = token;
+		          //document.getElementById('quickstart-oauthtoken').textContent = token;
 		        } else {
-		          document.getElementById('quickstart-oauthtoken').textContent = 'null';
+		          //document.getElementById('quickstart-oauthtoken').textContent = 'null';
 		          // [END_EXCLUDE]
 		        }
 		        // The signed-in user info.
@@ -132,6 +132,11 @@
 		          // [START_EXCLUDE]
 		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
 		          document.getElementById('quickstart-sign-in').textContent = 'Sign in with Google';
+				  document.getElementById("name").textContent = "Jane Doe";
+				  document.getElementById("Challenge").textContent = "";
+				  document.getElementById("Officer Chat").textContent = "";
+				  document.getElementById("Prof").textContent = "";
+				  document.getElementById("Social").textContent = "";
 		          // document.getElementById('quickstart-account-details').textContent = 'null';
 		          // document.getElementById('quickstart-oauthtoken').textContent = 'null';
 		          // [END_EXCLUDE]
@@ -190,9 +195,9 @@
 							<span class="avatar"><img src="images/upelogo.png" alt="" /></span>
 							<h1 id="name">Jane Doe</h1>
 							<p id="Challenge"></p>
-              <p id="Officer Chats"></p>
-              <p id="Prof"></p>
-              <p id="Social"></p>
+			                <p id="Officer Chat"></p>
+			                <p id="Prof"></p>
+			                <p id="Social"></p>
 						</header>
 						<!--
 						<hr />
