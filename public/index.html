@@ -159,25 +159,22 @@
 		      initApp();
 		    };
 		    function queryDatabase() {
-		    	console.log("queried database");
-		        var database = firebase.database();
-		        var uid = firebase.auth().currentUser.uid;
-		        var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-		        reqCount.on('value', function(snapshot) {
-		          var lst = [];
-		          snapshot.forEach(function(childSnapshot) {
-		               var key = childSnapshot.key;
-		               var item = childSnapshot.val();
-		               lst.push(key);
-		               lst.push(item);
-		          });
-		          document.getElementById('req').textContent = lst;
-		        });
-		        // document.getElementById("demo").innerHTML = firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-		        //     var username = (snapshot.val() && snapshot.val().requirements) || 'Anonymous';
-		        // });
-		        // console.log('called');
-		    }
+            var database = firebase.database();
+            var uid = firebase.auth().currentUser.uid;
+            var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+            reqCount.once('value').then(function(snapshot) {
+              var lst = [];
+              var dict = new Map();
+              snapshot.forEach(function(childSnapshot) {
+                   dict.set(childSnapshot.key, childSnapshot.val())
+              });
+              var currVal = "";
+              for (var [key, value] of dict) {
+                currVal = key + ": " + value;
+                document.getElementById(key).textContent = currVal;
+              }
+            });
+        }
 		  </script>
 
 
@@ -192,7 +189,10 @@
 						<header>
 							<span class="avatar"><img src="images/upelogo.png" alt="" /></span>
 							<h1 id="name">Jane Doe</h1>
-							<p id="req"></p>
+							<p id="Challenge"></p>
+              <p id="Officer Chats"></p>
+              <p id="Prof"></p>
+              <p id="Social"></p>
 						</header>
 						<!--
 						<hr />
