@@ -133,20 +133,20 @@ limitations under the License.
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
           document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-          document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
           var db = firebase.database();
           var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-          reqCount.on('value', function(snapshot) {
-            document.getElementById('special_number').textContent = snapshot.val();
-          });
+          // reqCount.on('value', function(snapshot) {
+          //   document.getElementById('special_number').textContent = snapshot.val();
+          // });
           // [END_EXCLUDE]
         } else {
           // User is signed out.
           // [START_EXCLUDE]
           document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
           document.getElementById('quickstart-sign-in').textContent = 'Sign in with Google';
-          document.getElementById('quickstart-account-details').textContent = 'null';
-          document.getElementById('quickstart-oauthtoken').textContent = 'null';
+          // document.getElementById('quickstart-account-details').textContent = 'null';
+          // document.getElementById('quickstart-oauthtoken').textContent = 'null';
           // [END_EXCLUDE]
         }
         // [START_EXCLUDE]
@@ -175,7 +175,14 @@ limitations under the License.
         var uid = firebase.auth().currentUser.uid;
         var reqCount = firebase.database().ref('users/' + uid + '/requirements');
         reqCount.on('value', function(snapshot) {
-          document.getElementById('req').textContent = snapshot.val();
+          var lst = [];
+          snapshot.forEach(function(childSnapshot) {
+               var key = childSnapshot.key;
+               var item = childSnapshot.val();
+               lst.push(key);
+               lst.push(item);
+          });
+          document.getElementById('req').textContent = lst;
         });
         // document.getElementById("demo").innerHTML = firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
         //     var username = (snapshot.val() && snapshot.val().requirements) || 'Anonymous';
