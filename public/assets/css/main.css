@@ -718,14 +718,24 @@
 		list-style: none;
 		padding-left: 0;
 		margin-top: -0.675em;
+
 	}
 
 		ul.icons li {
 			display: inline-block;
 			padding: 0.675em 0.5em;
+			background-color: #125585; 
+
+			padding: 8px 16px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			color: white;
+	  		font-size: 16px;
+	  		border-radius: 4px;
 		}
 
-			ul.icons li a {
+/*			ul.icons li a {
 				text-decoration: none;
 				position: relative;
 				display: block;
@@ -738,7 +748,7 @@
 				text-align: center;
 				text-indent: 3.75em;
 				white-space: nowrap;
-			}
+			}*/
 
 				ul.icons li a:before {
 					-moz-osx-font-smoothing: grayscale;
@@ -909,7 +919,7 @@
 				display: block;
 				margin: 0 auto;
 				border-radius: 100%;
-				box-shadow: 0 0 0 1.5em #ffffff;
+				box-shadow: 0 0 0 1.5em #ffffff;z
 			}
 
 			#main .avatar:before {
@@ -1028,3 +1038,27 @@
 		body.is-ie #wrapper {
 			height: 100%;
 		}
+
+/* Spinner */
+.spinner:before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  margin-left: -30px;
+  border-radius: 50%;
+  border: 3px solid darkgray;
+  border-top-color: #125585;
+  animation: spinner 0.7s linear infinite;
+
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Tracker</title>
+		<title>UPE Candidates</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -39,6 +39,10 @@
 		     */
 		    // [START buttoncallback]
 		    function toggleSignIn() {
+
+				//document.getElementById("spinner").style.display = "block";
+			
+
 		      if (!firebase.auth().currentUser) {
 		        // [START createprovider]
 		        var provider = new firebase.auth.GoogleAuthProvider();
@@ -48,10 +52,14 @@
 		        // [END addscopes]
 		        // [START signin]
 		        firebase.auth().signInWithRedirect(provider);
+		    //     document.getElementById("quickstart-sign-in").style.display = "none";
+			  	// document.getElementById("spinner").style.display = "block";
 		        // [END signin]
 		      } else {
 		        // [START signout]
 		        firebase.auth().signOut();
+		    //   	document.getElementById("quickstart-sign-in").style.display = "none";
+			  	// document.getElementById("spinner").style.display = "block";
 		        // [END signout]
 		      }
 		      // [START_EXCLUDE]
@@ -69,6 +77,10 @@
 		    function initApp() {
 		      // Result from Redirect auth flow.
 		      // [START getidptoken]
+			  //document.getElementById("spinner").style.display = "none";
+
+
+
 		      firebase.auth().getRedirectResult().then(function(result) {
 		        if (result.credential) {
 		          // This gives you a Google Access Token. You can use it to access the Google API.
@@ -113,12 +125,15 @@
 		          var email = user.email;
 		          var emailVerified = user.emailVerified;
 		          var photoURL = user.photoURL;
+
 		          var isAnonymous = user.isAnonymous;
 		          var uid = user.uid;
 		          var providerData = user.providerData;
 		          // [START_EXCLUDE]
 		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-		          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+		          //document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+		          //document.getElementById("spinner").style.display = "none";
+
 		          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
 		          var db = firebase.database();
 		          var reqCount = firebase.database().ref('users/' + uid + '/requirements');
@@ -131,8 +146,10 @@
 		          // User is signed out.
 		          // [START_EXCLUDE]
 		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-		          document.getElementById('quickstart-sign-in').textContent = 'Sign in with Google';
-				  document.getElementById("name").textContent = "Jane Doe";
+		          // document.getElementById("spinner").style.display = "none";
+
+		          document.getElementById('quickstart-sign-in').textContent = 'Sign In';
+				  document.getElementById("name").textContent = "UPE Candidates";
 				  document.getElementById("Challenge").textContent = "";
 				  document.getElementById("Officer Chat").textContent = "";
 				  document.getElementById("Prof").textContent = "";
@@ -164,22 +181,25 @@
 		      initApp();
 		    };
 		    function queryDatabase() {
-            var database = firebase.database();
-            var uid = firebase.auth().currentUser.uid;
-            var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-            reqCount.once('value').then(function(snapshot) {
-              var lst = [];
-              var dict = new Map();
-              snapshot.forEach(function(childSnapshot) {
-                   dict.set(childSnapshot.key, childSnapshot.val())
-              });
-              var currVal = "";
-              for (var [key, value] of dict) {
-                currVal = key + ": " + value;
-                document.getElementById(key).textContent = currVal;
-              }
-            });
-        }
+	            var database = firebase.database();
+	            var uid = firebase.auth().currentUser.uid;
+	            var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+	            reqCount.once('value').then(function(snapshot) {
+
+	              //document.getElementById("spinner").style.display = "none";
+
+	              var lst = [];
+	              var dict = new Map();
+	              snapshot.forEach(function(childSnapshot) {
+	                   dict.set(childSnapshot.key, childSnapshot.val())
+	              });
+	              var currVal = "";
+	              for (var [key, value] of dict) {
+	                currVal = key + ": " + value;
+	                document.getElementById(key).textContent = currVal;
+	              }
+	            });
+        	}
 		  </script>
 
 
@@ -192,8 +212,9 @@
 				<!-- Main -->
 					<section id="main">
 						<header>
-							<span class="avatar"><img src="images/upelogo.png" alt="" /></span>
-							<h1 id="name">Jane Doe</h1>
+							<span class="avatar"><img id="profile-image" src="images/upelogo.png" alt="" /></span>
+							<h1 id="name">UPE Candidates</h1>
+							<!-- <div id="spinner" class="spinner"></div> -->
 							<p id="Challenge"></p>
 			                <p id="Officer Chat"></p>
 			                <p id="Prof"></p>
@@ -246,7 +267,7 @@
 				<!-- Footer -->
 					<footer id="footer">
 						<ul class="copyright">
-							<li>&copy; Jane Doe</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							<li>&copy; UPE Berkeley</li><li>Candidate Tracker</li>
 						</ul>
 					</footer>
 
