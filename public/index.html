@@ -54,10 +54,13 @@
 		        firebase.auth().signInWithRedirect(provider);
 		    //     document.getElementById("quickstart-sign-in").style.display = "none";
 			  	// document.getElementById("spinner").style.display = "block";
+
 		        // [END signin]
 		      } else {
 		        // [START signout]
 		        firebase.auth().signOut();
+
+
 		    //   	document.getElementById("quickstart-sign-in").style.display = "none";
 			  	// document.getElementById("spinner").style.display = "block";
 		        // [END signout]
@@ -74,20 +77,22 @@
 		     *  - firebase.auth().getRedirectResult(): This promise completes when the user gets back from
 		     *    the auth redirect flow. It is where you can get the OAuth access token from the IDP.
 		     */
-		    function initApp() {
+		    function initApp(numAuthChanges) {
 		      // Result from Redirect auth flow.
 		      // [START getidptoken]
-			  //document.getElementById("spinner").style.display = "none";
-
+			  document.getElementById("spinner").style.display = "none";
 
 
 		      firebase.auth().getRedirectResult().then(function(result) {
+
 		        if (result.credential) {
 		          // This gives you a Google Access Token. You can use it to access the Google API.
 		          var token = result.credential.accessToken;
+
 		          // [START_EXCLUDE]
 		          //document.getElementById('quickstart-oauthtoken').textContent = token;
 		        } else {
+
 		          //document.getElementById('quickstart-oauthtoken').textContent = 'null';
 		          // [END_EXCLUDE]
 		        }
@@ -117,6 +122,9 @@
 		      // [START authstatelistener]
 		      firebase.auth().onAuthStateChanged(function(user) {
 		        if (user) {
+
+		        	 document.getElementById("disclaimer").style.display = "none";
+
 		          // User is signed in.
 		          var displayName = user.displayName;
 
@@ -131,8 +139,10 @@
 		          var providerData = user.providerData;
 		          // [START_EXCLUDE]
 		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-		          //document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+		          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
 		          //document.getElementById("spinner").style.display = "none";
+
+
 
 		          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
 		          var db = firebase.database();
@@ -147,13 +157,20 @@
 		          // [START_EXCLUDE]
 		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
 		          // document.getElementById("spinner").style.display = "none";
+		           document.getElementById("disclaimer").style.display = "block";
+
+
+		          var candidateInfo = document.getElementById('candidate-info');
+		          while (candidateInfo.firstChild) {
+					  candidateInfo.removeChild(candidateInfo.firstChild);
+				  }
 
 		          document.getElementById('quickstart-sign-in').textContent = 'Sign In';
 				  document.getElementById("name").textContent = "UPE Candidates";
-				  document.getElementById("Challenge").textContent = "";
-				  document.getElementById("Officer Chat").textContent = "";
-				  document.getElementById("Prof").textContent = "";
-				  document.getElementById("Social").textContent = "";
+				  // document.getElementById("Challenge").textContent = "";
+				  // document.getElementById("Officer Chat").textContent = "";
+				  // document.getElementById("Prof").textContent = "";
+				  // document.getElementById("Social").textContent = "";
 		          // document.getElementById('quickstart-account-details').textContent = 'null';
 		          // document.getElementById('quickstart-oauthtoken').textContent = 'null';
 		          // [END_EXCLUDE]
@@ -178,28 +195,108 @@
 		    }
 
 		    window.onload = function() {
+
 		      initApp();
 		    };
 		    function queryDatabase() {
-	            var database = firebase.database();
-	            var uid = firebase.auth().currentUser.uid;
-	            var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-	            reqCount.once('value').then(function(snapshot) {
+	            // var database = firebase.database();
+	            // var uid = firebase.auth().currentUser.uid;
+	            // var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+	            // reqCount.once('value').then(function(snapshot) {
 
-	              //document.getElementById("spinner").style.display = "none";
+	            //   document.getElementById("spinner").style.display = "none";
 
-	              var lst = [];
-	              var dict = new Map();
-	              snapshot.forEach(function(childSnapshot) {
-	                   dict.set(childSnapshot.key, childSnapshot.val())
-	              });
-	              var currVal = "";
-	              for (var [key, value] of dict) {
-	                currVal = key + ": " + value;
-	                document.getElementById(key).textContent = currVal;
-	              }
+	            //   var lst = [];
+	            //   var dict = new Map();
+
+	            //   snapshot.forEach(function(childSnapshot) {
+	            //        dict.set(childSnapshot.key, childSnapshot.val())
+	            //   });
+
+	            //   var currVal = "";
+	            //   for (var [key, value] of dict) {
+	            //     currVal = key + ": " + value;
+	            //     document.getElementById(key).textContent = currVal;
+	            //   }
+	            // });
+	            document.getElementById("spinner").style.display = "block";
+
+	            var db = firebase.database();
+	            var userEmail = firebase.auth().currentUser.email;
+	            var dbRef = db.ref();
+	            var str = "";
+
+	            dbRef.once('value').then(function(snapshot) {
+
+	            	document.getElementById("spinner").style.display = "none";
+
+	            	snapshot.forEach(function(candidateSnapshot) {
+	            		var candidate = candidateSnapshot.val();
+
+	            		if (candidate.Email === userEmail) {
+
+	            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+	            				var key = candidateAttribute.key;
+	            				var lineNum = 0;
+	            				if (candidateAttribute.val().length != 0 
+	            						&& (key == "Mock Interview"
+									    || key == "Officer Chat 1"
+									    || key == "Officer Chat 2"
+									    || key == "Atlassian"
+									    || key == "Oracle"
+									    || key == "Jane Street"
+									    || key == "Interview Workshop"
+									    || key == "Splunk"
+									    || key == "Resume Workshop"
+									    || key == "Google Hashcode"
+									    || key == "Salesforce"
+									    || key == "Research Workshop"
+									    || key == "Accel"
+									    || key == "Negotiations"
+									    || key == "Women in EECS Panel"
+									    || key == "Glade Picnic"
+									    || key == "Palentine's"
+									    || key == "Bowling"
+									    || key == "Big Little Meet n Greet"
+									    || key == "rock climbing"
+									    || key == "board games"
+									    || key == "scav hunt"
+									    || key == "Berkeley Project" 
+									    || key == "Challenge Finished")) {
+
+		                			var line = document.createElement("p");                
+		                			line.textContent = key + " ✓";
+									document.getElementById("candidate-info").appendChild(line);
+		                		}
+	            			});
+
+	            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+	            				var key = candidateAttribute.key;
+	            				var lineNum = 0;
+	            				if (candidateAttribute.val().length != 0 && (
+			            			    key == "Total Prof"
+									    || key == "Total Social"
+									    || key == "Total Officer Chat"
+									    || key == "Total Mock or Challenge")) {
+
+		                			var line = document.createElement("p");                
+		                			line.textContent = key + ": " + candidateAttribute.val();
+									document.getElementById("candidate-info").appendChild(line);
+		                		}
+	            			});
+
+	            		}
+
+
+	            	});
+
+	            	//document.getElementById("candidate-info").textContent = str;
+
 	            });
         	}
+
 		  </script>
 
 
@@ -214,11 +311,13 @@
 						<header>
 							<span class="avatar"><img id="profile-image" src="images/upelogo.png" alt="" /></span>
 							<h1 id="name">UPE Candidates</h1>
-							<!-- <div id="spinner" class="spinner"></div> -->
-							<p id="Challenge"></p>
+							<p id="candidate-info"></p>
+							<div id="spinner" class="spinner"></div>
+<!-- 							<p id="Challenge"></p>
 			                <p id="Officer Chat"></p>
 			                <p id="Prof"></p>
-			                <p id="Social"></p>
+			                <p id="Social"></p> -->
+
 						</header>
 						<!--
 						<hr />
@@ -261,6 +360,8 @@
 							<ul class="icons">
 								<li id="quickstart-sign-in"><a href="#" class="signin">Sign In</a></li>
 							</ul>
+							<p id="disclaimer">If you have already signed in, please wait a couple seconds.</p>
+
 						</footer>
 					</section>
 
