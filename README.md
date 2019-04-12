@@ -1,6 +1,6 @@
 # CandidateTracker
 
-##Setup
+## Setup
 
 1. Clone repository
 
