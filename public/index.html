@@ -27,9 +27,9 @@
 			    firebase.initializeApp(config);
 			 </script>
 
-			<script src="/__/firebase/5.7.0/firebase-app.js"></script>
+		  <script src="/__/firebase/5.7.0/firebase-app.js"></script>
 		  <script src="/__/firebase/5.7.0/firebase-auth.js"></script>
-		  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+		  <!-- <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script> -->
 		  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 		  <script src="/__/firebase/init.js"></script>
 
@@ -38,10 +38,11 @@
 		     * Function called when clicking the Login/Logout button.
 		     */
 		    // [START buttoncallback]
+			var name = "";
 		    function toggleSignIn() {
 
 				//document.getElementById("spinner").style.display = "block";
-			
+
 
 		      if (!firebase.auth().currentUser) {
 		        // [START createprovider]
@@ -127,7 +128,7 @@
 
 		          // User is signed in.
 		          var displayName = user.displayName;
-
+				  name = displayName;
 		          document.getElementById("name").textContent = displayName;
 
 		          var email = user.email;
@@ -219,27 +220,35 @@
 	            //     document.getElementById(key).textContent = currVal;
 	            //   }
 	            // });
+
 	            document.getElementById("spinner").style.display = "block";
 
 	            var db = firebase.database();
 	            var userEmail = firebase.auth().currentUser.email;
 	            var dbRef = db.ref();
 	            var str = "";
+				var admins = ["dylantran@berkeley.edu", "ramk@berkeley.edu"];
+
 
 	            dbRef.once('value').then(function(snapshot) {
 
 	            	document.getElementById("spinner").style.display = "none";
-
+					var found = 0;
 	            	snapshot.forEach(function(candidateSnapshot) {
 	            		var candidate = candidateSnapshot.val();
 
-	            		if (candidate.Email === userEmail) {
-
+						if (admins.includes(userEmail)) { // not secure
+							console.log("YEAH")
+							window.location = "adminpanel.html?name=" + name;
+							found = 1;
+						} else if (candidate.Email === userEmail) {
+							found = 1;
+							console.log("top", found);
 	            			candidateSnapshot.forEach(function(candidateAttribute) {
 
 	            				var key = candidateAttribute.key;
 	            				var lineNum = 0;
-	            				if (candidateAttribute.val().length != 0 
+	            				if (candidateAttribute.val().length != 0
 	            						&& (key == "Mock Interview"
 									    || key == "Officer Chat 1"
 									    || key == "Officer Chat 2"
@@ -262,12 +271,13 @@
 									    || key == "rock climbing"
 									    || key == "board games"
 									    || key == "scav hunt"
-									    || key == "Berkeley Project" 
+									    || key == "Berkeley Project"
 									    || key == "Challenge Finished")) {
 
-		                			var line = document.createElement("p");                
+		                			var line = document.createElement("p");
 		                			line.textContent = key + " ✓";
 									document.getElementById("candidate-info").appendChild(line);
+
 		                		}
 	            			});
 
@@ -281,7 +291,7 @@
 									    || key == "Total Officer Chat"
 									    || key == "Total Mock or Challenge")) {
 
-		                			var line = document.createElement("p");                
+		                			var line = document.createElement("p");
 		                			line.textContent = key + ": " + candidateAttribute.val();
 									document.getElementById("candidate-info").appendChild(line);
 		                		}
@@ -290,11 +300,16 @@
 	            		}
 
 
-	            	});
 
+	            	});
+					console.log("bottom", found);
+					if (found == 0) {
+						document.getElementById("candidate-info").textContent = "This email is not valid. Please try signing in with a valid email";
+					}
 	            	//document.getElementById("candidate-info").textContent = str;
 
 	            });
+
         	}
 
 		  </script>
