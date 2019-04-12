@@ -12,8 +12,9 @@
 
 3. Launch
    
-    'firebase serve'
+    `firebase serve`
+
 
 4. Access application
-
-    located at: 'http://localhost:5000/'
+   
+    `http://localhost:5000/`
