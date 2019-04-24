@@ -11,6 +11,26 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+
+			<script>
+			    // Initialize Firebase
+			    var config = {
+			      apiKey: "AIzaSyDabYfBxOCRUizOOn1eiyimxmdv0Bmr13Q",
+			      authDomain: "candidatetracker-58223.firebaseapp.com",
+			      databaseURL: "https://candidatetracker-58223.firebaseio.com",
+			      projectId: "candidatetracker-58223",
+			      storageBucket: "candidatetracker-58223.appspot.com",
+			      messagingSenderId: "423650086109"
+			    };
+			    firebase.initializeApp(config);
+			 </script>
+
+		<script src="/__/firebase/5.7.0/firebase-app.js"></script>
+		<script src="/__/firebase/5.7.0/firebase-auth.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script> -->
+		<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+		<script src="/__/firebase/init.js"></script>
 		<script type="text/javascript">
 		function getParameterByName(name, url) {
 		    if (!url) url = window.location.href;
@@ -27,6 +47,10 @@
         }
 		function nav() {
 			window.location = "checkin.html";
+		}
+		function signOut() {
+			firebase.auth().signOut();
+			document.location.href = "index.html";
 		}
 
         </script>
@@ -89,6 +113,9 @@
 						<footer>
 							<ul class="icons">
 								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="nav()" >Check In</a></li>
+							</ul>
+							<ul class="icons">
+								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="signOut()" >Sign Out</a></li>
 							</ul>
 							<p id="disclaimer"></p>
 
