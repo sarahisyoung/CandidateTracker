@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<!--
+	Identity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>My Profile</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+		<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+
+			<script>
+			    // Initialize Firebase
+			    var config = {
+			      apiKey: "AIzaSyDabYfBxOCRUizOOn1eiyimxmdv0Bmr13Q",
+			      authDomain: "candidatetracker-58223.firebaseapp.com",
+			      databaseURL: "https://candidatetracker-58223.firebaseio.com",
+			      projectId: "candidatetracker-58223",
+			      storageBucket: "candidatetracker-58223.appspot.com",
+			      messagingSenderId: "423650086109"
+			    };
+			    firebase.initializeApp(config);
+			 </script>
+
+		  <script src="/__/firebase/5.7.0/firebase-app.js"></script>
+		  <script src="/__/firebase/5.7.0/firebase-auth.js"></script>
+		  <!-- <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script> -->
+		  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+		  <script src="/__/firebase/init.js"></script>
+
+		  <script type="text/javascript">
+		    /**
+		     * Function called when clicking the Login/Logout button.
+		     */
+		    // [START buttoncallback]
+			var name = "";
+		    function toggleSignIn() {
+
+				//document.getElementById("spinner").style.display = "block";
+
+
+		      if (!firebase.auth().currentUser) {
+		        // [START createprovider]
+		        var provider = new firebase.auth.GoogleAuthProvider();
+		        // [END createprovider]
+		        // [START addscopes]
+		        provider.addScope('https://www.googleapis.com/auth/plus.login');
+		        // [END addscopes]
+		        // [START signin]
+		        firebase.auth().signInWithRedirect(provider);
+		    //     document.getElementById("quickstart-sign-in").style.display = "none";
+			  	// document.getElementById("spinner").style.display = "block";
+
+		        // [END signin]
+		      } else {
+		        // [START signout]
+		        firebase.auth().signOut();
+		        document.location.href = "index.html"
+
+
+		    //   	document.getElementById("quickstart-sign-in").style.display = "none";
+			  	// document.getElementById("spinner").style.display = "block";
+		        // [END signout]
+		      }
+		      // [START_EXCLUDE]
+		      document.getElementById('quickstart-sign-in').disabled = true;
+		      // [END_EXCLUDE]
+		    }
+		    // [END buttoncallback]
+		    /**
+		     * initApp handles setting up UI event listeners and registering Firebase auth listeners:
+		     *  - firebase.auth().onAuthStateChanged: This listener is called when the user is signed in or
+		     *    out, and that is where we update the UI.
+		     *  - firebase.auth().getRedirectResult(): This promise completes when the user gets back from
+		     *    the auth redirect flow. It is where you can get the OAuth access token from the IDP.
+		     */
+		    function initApp(numAuthChanges) {
+		      // Result from Redirect auth flow.
+		      // [START getidptoken]
+
+		      firebase.auth().getRedirectResult().then(function(result) {
+
+		        if (result.credential) {
+		          // This gives you a Google Access Token. You can use it to access the Google API.
+		          var token = result.credential.accessToken;
+		          
+
+		          // [START_EXCLUDE]
+		          //document.getElementById('quickstart-oauthtoken').textContent = token;
+		        } else {
+
+		          //document.getElementById('quickstart-oauthtoken').textContent = 'null';
+		          // [END_EXCLUDE]
+		        }
+		        // The signed-in user info.
+		        var user = result.user;
+
+		      }).catch(function(error) {
+		        // Handle Errors here.
+		        var errorCode = error.code;
+		        var errorMessage = error.message;
+		        // The email of the user's account used.
+		        var email = error.email;
+		        // The firebase.auth.AuthCredential type that was used.
+		        var credential = error.credential;
+		        // [START_EXCLUDE]
+		        if (errorCode === 'auth/account-exists-with-different-credential') {
+		          alert('You have already signed up with a different auth provider for that email.');
+		          // If you are using multiple auth providers on your app you should handle linking
+		          // the user's accounts here.
+		        } else {
+		          console.error(error);
+		        }
+		        // [END_EXCLUDE]
+		      });
+		      // [END getidptoken]
+		      // Listening for auth state changes.
+		      // [START authstatelistener]
+		      firebase.auth().onAuthStateChanged(function(user) {
+		        if (user) {
+
+		        	 document.getElementById("disclaimer").style.display = "none";
+
+		          // User is signed in.
+		          var displayName = user.displayName;
+				  name = displayName;
+		          document.getElementById("name").textContent = displayName;
+
+		          var email = user.email;
+		          var emailVerified = user.emailVerified;
+		          var photoURL = user.photoURL;
+
+		          var isAnonymous = user.isAnonymous;
+		          var uid = user.uid;
+		          var providerData = user.providerData;
+		          // [START_EXCLUDE]
+		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+		          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
+		          //document.getElementById("spinner").style.display = "none";
+
+
+		          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
+		          var db = firebase.database();
+		          var reqCount = firebase.database().ref('users/' + uid + '/requirements');
+		          // reqCount.on('value', function(snapshot) {
+		          //   document.getElementById('special_number').textContent = snapshot.val();
+		          // });
+		          // [END_EXCLUDE]
+		          queryDatabase();
+		        } else {
+		          // User is signed out.
+		          // [START_EXCLUDE]
+		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+		          // document.getElementById("spinner").style.display = "none";
+		           document.getElementById("disclaimer").style.display = "block";
+
+
+		          var candidateInfo = document.getElementById('candidate-info');
+		          while (candidateInfo.firstChild) {
+					  candidateInfo.removeChild(candidateInfo.firstChild);
+				  }
+
+		          document.getElementById('quickstart-sign-in').textContent = 'Sign In';
+				  document.getElementById("name").textContent = "UPE Candidates";
+		          // [END_EXCLUDE]
+		        }
+		        // [START_EXCLUDE]
+		        document.getElementById('quickstart-sign-in').disabled = false;
+		        // [END_EXCLUDE]
+		      });
+		      // [END authstatelistener]
+		      document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+
+		    }
+		    function writeUserEmailData() {
+		      console.log("writing user datagmfdlkg...")
+		      var user = firebase.auth().currentUser;
+		      if (user) {
+		        firebase.database().ref('users/' + user.uid).set({
+		          requirements: 543543543,
+		          email: user.email
+		        });
+		      }
+		    }
+
+		    window.onload = function() {
+
+		      initApp();
+		    };
+		    function queryDatabase() {
+
+	            document.getElementById("spinner").style.display = "block";
+
+	            var db = firebase.database();
+	            var userEmail = firebase.auth().currentUser.email;
+	            var dbRef = db.ref();
+	            var str = "";
+				var admins = ["dylantran@berkeley.edu", "ramk@berkeley.edu"];
+
+
+	            dbRef.once('value').then(function(snapshot) {
+
+	            	document.getElementById("spinner").style.display = "none";
+					var found = 0;
+	            	snapshot.forEach(function(candidateSnapshot) {
+	            		var candidate = candidateSnapshot.val();
+
+						if (admins.includes(userEmail)) { // not secure
+							console.log("YEAH")
+							window.location = "adminpanel.html?name=" + name;
+							found = 1;
+						} else if (candidate.Email === userEmail) {
+							found = 1;
+							console.log("top", found);
+	            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+	            				var key = candidateAttribute.key;
+	            				var lineNum = 0;
+	            				if (candidateAttribute.val().length != 0
+	            						&& (key == "Mock Interview"
+									    || key == "Officer Chat 1"
+									    || key == "Officer Chat 2"
+									    || key == "Atlassian"
+									    || key == "Oracle"
+									    || key == "Jane Street"
+									    || key == "Interview Workshop"
+									    || key == "Splunk"
+									    || key == "Resume Workshop"
+									    || key == "Google Hashcode"
+									    || key == "Salesforce"
+									    || key == "Research Workshop"
+									    || key == "Accel"
+									    || key == "Negotiations"
+									    || key == "Women in EECS Panel"
+									    || key == "Glade Picnic"
+									    || key == "Palentine's"
+									    || key == "Bowling"
+									    || key == "Big Little Meet n Greet"
+									    || key == "rock climbing"
+									    || key == "board games"
+									    || key == "scav hunt"
+									    || key == "Berkeley Project"
+									    || key == "Challenge Finished")) {
+
+		                			var line = document.createElement("p");
+		                			line.textContent = key + " ✓";
+									document.getElementById("candidate-info").appendChild(line);
+
+		                		}
+	            			});
+
+	            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+	            				var key = candidateAttribute.key;
+	            				var lineNum = 0;
+	            				if (candidateAttribute.val().length != 0 && (
+			            			    key == "Total Prof"
+									    || key == "Total Social"
+									    || key == "Total Officer Chat"
+									    || key == "Total Mock or Challenge")) {
+
+		                			var line = document.createElement("p");
+		                			line.textContent = key + ": " + candidateAttribute.val();
+									document.getElementById("candidate-info").appendChild(line);
+		                		}
+	            			});
+
+	            		}
+	            	document.getElementById("spinner").style.display = "none";
+
+	            	});
+
+	            });
+
+        	}
+
+		  </script>
+
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main">
+						<header>
+							<span class="avatar"><img id="profile-image" src="images/upelogo.png" alt="" /></span>
+							<h1 id="name">UPE Candidates</h1>
+							<p id="candidate-info"></p>
+							<div id="spinner" class="spinner"></div>
+
+						</header>
+
+						<footer>
+							<ul class="icons">
+								<li id="quickstart-sign-in"><a href="#" class="signin">Sign In</a></li>
+							</ul>
+							<p id="disclaimer">If you have already signed in, please wait a couple seconds.</p>
+
+						</footer>
+					</section>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<ul class="copyright">
+							<li>&copy; UPE Berkeley</li><li>Candidate Tracker</li>
+						</ul>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script>
+				if ('addEventListener' in window) {
+					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-preload\b/, ''); });
+					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+				}
+			</script>
+
+	</body>
+</html>

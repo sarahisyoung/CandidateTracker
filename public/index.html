@@ -83,12 +83,12 @@
 		      // [START getidptoken]
 			  document.getElementById("spinner").style.display = "none";
 
-
 		      firebase.auth().getRedirectResult().then(function(result) {
 
 		        if (result.credential) {
 		          // This gives you a Google Access Token. You can use it to access the Google API.
 		          var token = result.credential.accessToken;
+
 
 		          // [START_EXCLUDE]
 		          //document.getElementById('quickstart-oauthtoken').textContent = token;
@@ -124,35 +124,10 @@
 		      firebase.auth().onAuthStateChanged(function(user) {
 		        if (user) {
 
-		        	 document.getElementById("disclaimer").style.display = "none";
+		        	document.location.href = "candidatepage.html"
 
-		          // User is signed in.
-		          var displayName = user.displayName;
-				  name = displayName;
-		          document.getElementById("name").textContent = displayName;
-
-		          var email = user.email;
-		          var emailVerified = user.emailVerified;
-		          var photoURL = user.photoURL;
-
-		          var isAnonymous = user.isAnonymous;
-		          var uid = user.uid;
-		          var providerData = user.providerData;
-		          // [START_EXCLUDE]
-		          // document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-		          document.getElementById('quickstart-sign-in').textContent = 'Sign out';
-		          //document.getElementById("spinner").style.display = "none";
-
-
-
-		          //document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-		          var db = firebase.database();
-		          var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-		          // reqCount.on('value', function(snapshot) {
-		          //   document.getElementById('special_number').textContent = snapshot.val();
-		          // });
 		          // [END_EXCLUDE]
-		          queryDatabase();
+
 		        } else {
 		          // User is signed out.
 		          // [START_EXCLUDE]
@@ -160,20 +135,6 @@
 		          // document.getElementById("spinner").style.display = "none";
 		           document.getElementById("disclaimer").style.display = "block";
 
-
-		          var candidateInfo = document.getElementById('candidate-info');
-		          while (candidateInfo.firstChild) {
-					  candidateInfo.removeChild(candidateInfo.firstChild);
-				  }
-
-		          document.getElementById('quickstart-sign-in').textContent = 'Sign In';
-				  document.getElementById("name").textContent = "UPE Candidates";
-				  // document.getElementById("Challenge").textContent = "";
-				  // document.getElementById("Officer Chat").textContent = "";
-				  // document.getElementById("Prof").textContent = "";
-				  // document.getElementById("Social").textContent = "";
-		          // document.getElementById('quickstart-account-details').textContent = 'null';
-		          // document.getElementById('quickstart-oauthtoken').textContent = 'null';
 		          // [END_EXCLUDE]
 		        }
 		        // [START_EXCLUDE]
@@ -184,133 +145,12 @@
 		      document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
 
 		    }
-		    function writeUserEmailData() {
-		      console.log("writing user datagmfdlkg...")
-		      var user = firebase.auth().currentUser;
-		      if (user) {
-		        firebase.database().ref('users/' + user.uid).set({
-		          requirements: 543543543,
-		          email: user.email
-		        });
-		      }
-		    }
 
 		    window.onload = function() {
 
 		      initApp();
 		    };
-		    function queryDatabase() {
-	            // var database = firebase.database();
-	            // var uid = firebase.auth().currentUser.uid;
-	            // var reqCount = firebase.database().ref('users/' + uid + '/requirements');
-	            // reqCount.once('value').then(function(snapshot) {
-
-	            //   document.getElementById("spinner").style.display = "none";
-
-	            //   var lst = [];
-	            //   var dict = new Map();
-
-	            //   snapshot.forEach(function(childSnapshot) {
-	            //        dict.set(childSnapshot.key, childSnapshot.val())
-	            //   });
-
-	            //   var currVal = "";
-	            //   for (var [key, value] of dict) {
-	            //     currVal = key + ": " + value;
-	            //     document.getElementById(key).textContent = currVal;
-	            //   }
-	            // });
-
-	            document.getElementById("spinner").style.display = "block";
-
-	            var db = firebase.database();
-	            var userEmail = firebase.auth().currentUser.email;
-	            var dbRef = db.ref();
-	            var str = "";
-				var admins = ["dylantran@berkeley.edu", "ramk@berkeley.edu"];
-
-
-	            dbRef.once('value').then(function(snapshot) {
-
-	            	document.getElementById("spinner").style.display = "none";
-					var found = 0;
-	            	snapshot.forEach(function(candidateSnapshot) {
-	            		var candidate = candidateSnapshot.val();
-
-						if (admins.includes(userEmail)) { // not secure
-							console.log("YEAH")
-							window.location = "adminpanel.html?name=" + name;
-							found = 1;
-						} else if (candidate.Email === userEmail) {
-							found = 1;
-							console.log("top", found);
-	            			candidateSnapshot.forEach(function(candidateAttribute) {
-
-	            				var key = candidateAttribute.key;
-	            				var lineNum = 0;
-	            				if (candidateAttribute.val().length != 0
-	            						&& (key == "Mock Interview"
-									    || key == "Officer Chat 1"
-									    || key == "Officer Chat 2"
-									    || key == "Atlassian"
-									    || key == "Oracle"
-									    || key == "Jane Street"
-									    || key == "Interview Workshop"
-									    || key == "Splunk"
-									    || key == "Resume Workshop"
-									    || key == "Google Hashcode"
-									    || key == "Salesforce"
-									    || key == "Research Workshop"
-									    || key == "Accel"
-									    || key == "Negotiations"
-									    || key == "Women in EECS Panel"
-									    || key == "Glade Picnic"
-									    || key == "Palentine's"
-									    || key == "Bowling"
-									    || key == "Big Little Meet n Greet"
-									    || key == "rock climbing"
-									    || key == "board games"
-									    || key == "scav hunt"
-									    || key == "Berkeley Project"
-									    || key == "Challenge Finished")) {
-
-		                			var line = document.createElement("p");
-		                			line.textContent = key + " ✓";
-									document.getElementById("candidate-info").appendChild(line);
-
-		                		}
-	            			});
-
-	            			candidateSnapshot.forEach(function(candidateAttribute) {
-
-	            				var key = candidateAttribute.key;
-	            				var lineNum = 0;
-	            				if (candidateAttribute.val().length != 0 && (
-			            			    key == "Total Prof"
-									    || key == "Total Social"
-									    || key == "Total Officer Chat"
-									    || key == "Total Mock or Challenge")) {
-
-		                			var line = document.createElement("p");
-		                			line.textContent = key + ": " + candidateAttribute.val();
-									document.getElementById("candidate-info").appendChild(line);
-		                		}
-	            			});
-
-	            		}
-
-
-
-	            	});
-					console.log("bottom", found);
-					if (found == 0) {
-						document.getElementById("candidate-info").textContent = "This email is not valid. Please try signing in with a valid email";
-					}
-	            	//document.getElementById("candidate-info").textContent = str;
-
-	            });
-
-        	}
+		    
 
 		  </script>
 
