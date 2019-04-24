@@ -124,8 +124,7 @@
 		      firebase.auth().onAuthStateChanged(function(user) {
 		        if (user) {
 
-		        	document.location.href = "candidatepage.html"
-
+		        	redirectToCorrectPage();
 		          // [END_EXCLUDE]
 
 		        } else {
@@ -150,6 +149,50 @@
 
 		      initApp();
 		    };
+
+
+
+			function redirectToCorrectPage() {
+
+	            document.getElementById("spinner").style.display = "block";
+
+	            var db = firebase.database();
+	            var userEmail = firebase.auth().currentUser.email;
+	            var dbRef = db.ref();
+	            var str = "";
+
+	            dbRef.once('value').then(function(snapshot) {
+
+	            	document.getElementById("spinner").style.display = "none";
+
+	            	snapshot.forEach(function(candidateSnapshot) {
+	            		var candidate = candidateSnapshot.val();
+
+						if (candidate.Email === userEmail) {
+
+	            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+	            				var key = candidateAttribute.key;
+	            				var lineNum = 0;
+	            				if (key == "person type") {
+
+	            					if (candidateAttribute.val() == 0) {
+	            						document.location.href = "candidatepage.html"
+	            					} else if (candidateAttribute.val() == 1) {
+	            						document.location.href = "adminpanel.html"
+	            					}
+
+		                		}
+	            			});
+
+	            		}
+
+	            	});
+
+	            });
+
+        	}
+
 		    
 
 		  </script>
