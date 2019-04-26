@@ -73,7 +73,7 @@
 					var userEmail = lst[i]
 					snapshot.forEach(function(candidateSnapshot) {
 						var candidate = candidateSnapshot.val();
-
+						console.log(Object.keys(candidate)[0]);
 						if (candidate.Email === userEmail) {
 
 							candidateSnapshot.forEach(function(candidateAttribute) {
@@ -93,6 +93,7 @@
 					});
 				}
 			});
+			$("#myTags").tagit("removeAll");
 		}
 
 			$(document).ready(function() {
