@@ -42,12 +42,12 @@
 
 						<ul id="myTags">
 						    <!-- Existing list items will be pre-added to the tags -->
-						    <li class="taggy">Tag1</li>
-						    <li class="taggy">Tag2</li>
+						    <li>Tag1</li>
+						    <li>Tag2</li>
 						</ul>
 
 						<hr />
-						<h2>Extra Stuff!</h2>
+						<h2>Check in</h2>
 						<form method="post" action="#">
 							<div class="fields">
 								<div class="field">
@@ -58,13 +58,19 @@
 								</div>
 								<div class="field">
 									<select name="department" id="department">
-										<option selected="selected" value = "null">Requirement Met</option>
+										<option disabled selected value> -- Requirement -- </option>
 										<option value="chat">Officer Chat</option>
 										<option value="social">Social Event</option>
 										<option value="prof">Professional Event</option>
 										<option value="challemge">Officer Challenge</option>
 									</select>
 								</div>
+								<hr/>
+								<ul class="actions special">
+									<li><a href="#" class="button">Submit</a></li>
+								</ul>
+							</form>
+
 								<!-- <div class="field">
 									<textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
 								</div> -->
