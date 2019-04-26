@@ -69,7 +69,7 @@
                 snapshot.forEach(function(candidateSnapshot) {
                     var currid = keys[count];
                     count++;
-                    if (keys != "Events") {
+                    if (currid != "Events") {
                         var candidate = candidateSnapshot.val();
                         dbRef.child(currid).child(value).set("");
                         //console.log("success");
