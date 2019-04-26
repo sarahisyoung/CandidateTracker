@@ -11,10 +11,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-
-
-        </script>
+			$(document).ready(function() {
+				$("#myTags").tagit();
+			});
+		</script>
 	</head>
 	<body class="is-preload">
 
@@ -35,8 +39,15 @@
 
 						</header>
 
-						<h2>Check in</h2>
-						<hr/>
+
+						<ul id="myTags">
+						    <!-- Existing list items will be pre-added to the tags -->
+						    <li class="taggy">Tag1</li>
+						    <li class="taggy">Tag2</li>
+						</ul>
+
+						<hr />
+						<h2>Extra Stuff!</h2>
 						<form method="post" action="#">
 							<div class="fields">
 								<div class="field">
@@ -47,11 +58,11 @@
 								</div>
 								<div class="field">
 									<select name="department" id="department">
-										<option value="">Officer Chat</option>
-										<option value="sales">Social Event</option>
-										<option value="tech">Professional Event</option>
-										<option value="null">Officer Challenge</option>
-										<option value="null"></option>
+										<option selected="selected" value = "null">Requirement Met</option>
+										<option value="chat">Officer Chat</option>
+										<option value="social">Social Event</option>
+										<option value="prof">Professional Event</option>
+										<option value="challemge">Officer Challenge</option>
 									</select>
 								</div>
 								<!-- <div class="field">
@@ -64,7 +75,7 @@
 									<label>But are you a robot?</label>
 									<input type="radio" id="robot_yes" name="robot" /><label for="robot_yes">Yes</label>
 									<input type="radio" id="robot_no" name="robot" /><label for="robot_no">No</label>
-								</div> -->
+								</div>
 							</div>
 							<hr />
 							<ul class="actions special">
