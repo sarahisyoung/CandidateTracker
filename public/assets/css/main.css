@@ -552,7 +552,7 @@
 		}
 
 	ul {
-		list-style: disc;
+		list-style: none;
 		margin: 0 0 1.5em 0;
 		padding-left: 1em;
 	}
@@ -724,7 +724,7 @@
 		ul.icons li {
 			display: inline-block;
 			padding: 0.675em 0.5em;
-			background-color: #125585; 
+			background-color: #125585;
 
 			padding: 8px 16px;
 			text-align: center;
@@ -956,6 +956,7 @@
 			opacity: 0;
 		}
 
+
 /* Footer */
 
 	#footer {
@@ -988,7 +989,6 @@
 				#footer .copyright li:first-child {
 					border-left: 0;
 				}
-
 /* Wrapper */
 
 	#wrapper {
