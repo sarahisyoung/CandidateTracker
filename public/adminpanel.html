@@ -120,7 +120,12 @@
 					var event = candidateSnapshot.val();
 					var option = document.createElement('option');
 					option.text = option.value = event;
-					select.add(option, 0);
+
+					if (option.text === "") {
+
+					}	else {
+						select.add(option, 0);
+					}
 				});
 
 			});
@@ -203,7 +208,7 @@
 	                    <form id="form" method="post" action="#">
 	                        <div class="fields">
 	                            <div class="field">
-	                                <select id="drop" name="Category" id="department">
+	                                <select id="drop" name="Category">
 
 	                                </select>
 	                            </div>
