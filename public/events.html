@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<!--
+	Identity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Add Event</title>
+        <meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+		<link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
+
+			<script>
+			    // Initialize Firebase
+			    var config = {
+			      apiKey: "AIzaSyDabYfBxOCRUizOOn1eiyimxmdv0Bmr13Q",
+			      authDomain: "candidatetracker-58223.firebaseapp.com",
+			      databaseURL: "https://candidatetracker-58223.firebaseio.com",
+			      projectId: "candidatetracker-58223",
+			      storageBucket: "candidatetracker-58223.appspot.com",
+			      messagingSenderId: "423650086109"
+			    };
+			    firebase.initializeApp(config);
+			 </script>
+
+		<script src="/__/firebase/5.7.0/firebase-app.js"></script>
+		<script src="/__/firebase/5.7.0/firebase-auth.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script> -->
+		<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
+		<script src="/__/firebase/init.js"></script>
+		<script type="text/javascript">
+
+
+		function getParameterByName(name, url) {
+		    if (!url) url = window.location.href;
+		    name = name.replace(/[\[\]]/g, '\\$&');
+		    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+		        results = regex.exec(url);
+		    if (!results) return null;
+		    if (!results[2]) return '';
+		    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+		}
+
+        function checkin() {
+            document.location.href = "adminpanel.html"
+        }
+
+        function add() {
+            console.log("go");
+            var x = document.getElementById("form");
+            var value = x.elements[0].value;
+            var db = firebase.database();
+            var userEmail = firebase.auth().currentUser.email;
+            var dbRef = db.ref();
+            var str = "";
+            var count = 0;
+            db.ref('Events/').push(value);
+            dbRef.once('value').then(function(snapshot) {
+                var keys = Object.keys(snapshot.val());
+
+                snapshot.forEach(function(candidateSnapshot) {
+                    var currid = keys[count];
+                    count++;
+                    if (keys != "Events") {
+                        var candidate = candidateSnapshot.val();
+                        dbRef.child(currid).child(value).set("");
+                        //console.log("success");
+                    }
+
+                });
+
+            });
+        }
+
+        function check() {
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user == null) {
+					document.location.href = "error.html"
+					console.log("wtf");
+				} else {
+					console.log("right");
+					var db = firebase.database();
+		            var userEmail = user.email;
+		            var dbRef = db.ref();
+		            var str = "";
+					var role = 0;
+		            dbRef.once('value').then(function(snapshot) {
+
+
+		            	snapshot.forEach(function(candidateSnapshot) {
+		            		var candidate = candidateSnapshot.val();
+
+							if (candidate.Email === userEmail) {
+
+		            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+		            				var key = candidateAttribute.key;
+		            				var lineNum = 0;
+		            				if (key == "person type") {
+										val = candidateAttribute.val();
+										role = val;
+										console.log("inside loop", val);
+			                		}
+		            			});
+
+		            		}
+
+		            	});
+						if (role == 0) {
+							console.log(role);
+							document.location.href = "index.html"
+						} else {
+							console.log("worked");
+
+						}
+
+		            });
+
+				}
+			});
+        }
+</script>
+
+</head>
+<body class="is-preload" onload="check()">
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Main -->
+                <section id="main">
+                    <header>
+                        <span class="avatar"><img id="profile-image" src="images/upelogo.png" alt="" /></span>
+                        <h1 id="name">Add Events</h1>
+                        <p id="candidate-info"></p>
+
+<!-- 							<p id="Challenge"></p>
+                        <p id="Officer Chat"></p>
+                        <p id="Prof"></p>
+                        <p id="Social"></p> -->
+
+
+                    </header>
+
+                    <hr />
+                    <form id="form" method="post" action="#">
+                        <div class="fields">
+                            <div class="field">
+                                <input type="text" name="name" id="name" placeholder="Event Name" />
+                            </div>
+                            <div class="field">
+                                <select name="Category" id="department">
+                                    <option value="">Professional</option>
+                                    <option value="sales">Social</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <input type="checkbox" id="human" name="Confirm" /><label for="human">Are you really sure you want to do this?</label>
+                            </div>
+                        </div>
+                        <ul class="actions special">
+                            <li><a href="#" class="button" onclick="add()">Add</a></li>
+                        </ul>
+                    </form>
+                    <hr />
+
+                    <footer>
+                        <ul class="icons">
+                            <li id="quickstart-sign-in"><a href="#" class="signin" onclick="checkin()" >Back to Event Check In</a></li>
+                        </ul>
+
+
+                    </footer>
+                </section>
+
+            <!-- Footer -->
+                <footer id="footer">
+                    <ul class="copyright">
+                        <li>&copy; UPE Berkeley</li><li>Candidate Tracker</li>
+                    </ul>
+                </footer>
+
+        </div>
+
+    <!-- Scripts -->
+        <script>
+            if ('addEventListener' in window) {
+                window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-preload\b/, ''); });
+                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+            }
+        </script>
+
+</body>
+</html>
