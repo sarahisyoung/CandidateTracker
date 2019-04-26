@@ -8,7 +8,8 @@
 
 2. Refer to documentation below to install firebase tools to use firebase commands
 
-    'https://firebase.google.com/docs/cli/'
+
+       'https://firebase.google.com/docs/cli/'
 
 3. Select alias (might have to install some firebase stuff before using this command)
 
@@ -27,4 +28,4 @@
 
 1. Refer to documentation for tag-it here; used in event sign in.
 	
-    'https://github.com/aehlke/tag-it'
+       'https://github.com/aehlke/tag-it'
