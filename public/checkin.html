@@ -11,10 +11,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-
-
-        </script>
+			$(document).ready(function() {
+				$("#myTags").tagit();
+			});
+		</script>
 	</head>
 	<body class="is-preload">
 
@@ -34,6 +38,13 @@
 							<p id="Social"></p> -->
 
 						</header>
+
+
+						<ul id="myTags">
+						    <!-- Existing list items will be pre-added to the tags -->
+						    <li>Tag1</li>
+						    <li>Tag2</li>
+						</ul>
 						<!--
 						<hr />
 						<h2>Extra Stuff!</h2>

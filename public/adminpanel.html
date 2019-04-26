@@ -12,6 +12,11 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+		<link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
 
 			<script>
 			    // Initialize Firebase
@@ -43,7 +48,7 @@
 		}
         function getName() {
 			var name = getParameterByName('name');
-			document.getElementById("name").textContent = "Welcome, " + name;
+			document.getElementById("name").textContent = "Event Check-in";
         }
 		function nav() {
 			window.location = "checkin.html";
@@ -53,6 +58,52 @@
 			document.location.href = "index.html";
 		}
 
+		function checkin() {
+			lst = $("#myTags").tagit("assignedTags");
+			var db = firebase.database();
+
+			var dbRef = db.ref();
+			var str = "";
+
+			dbRef.once('value').then(function(snapshot) {
+
+
+				var i;
+				for(i = 0; i < lst.length; i++) {
+					var userEmail = lst[i]
+					snapshot.forEach(function(candidateSnapshot) {
+						var candidate = candidateSnapshot.val();
+
+						if (candidate.Email === userEmail) {
+
+							candidateSnapshot.forEach(function(candidateAttribute) {
+
+								var key = candidateAttribute.key;
+								var lineNum = 0;
+								if (key == "Mock Interview") {
+									console.log("found")
+									candidateAttribute[key] = "x";
+
+								}
+								console.log("exit");
+							});
+
+						}
+
+					});
+				}
+			});
+		}
+
+			$(document).ready(function() {
+				$("#myTags").tagit({
+					availableTags: ["dylantran@berkeley.edu"],
+					autocomplete: {delay: 0, minLength: 2},
+					removeConfirmation: true,
+					showAutocompleteOnFocus: true,
+					placeholderText: "Enter your email"
+				});
+			});
         </script>
 	</head>
 	<body class="is-preload" onload="getName()">
@@ -64,15 +115,14 @@
 					<section id="main">
 						<header>
 							<span class="avatar"><img id="profile-image" src="images/upelogo.png" alt="" /></span>
-							<h1 id="name">Welcome</h1>
+							<h1 id="name">Check-in</h1>
 							<p id="candidate-info"></p>
-							<!-- <div id="spinner" class="spinner"></div> -->
-	<!-- 							<p id="Challenge"></p>
-							<p id="Officer Chat"></p>
-							<p id="Prof"></p>
-							<p id="Social"></p> -->
 
 						</header>
+						<ul id="myTags">
+						    <!-- Existing list items will be pre-added to the tags -->
+
+						</ul>
 						<!--
 						<hr />
 						<h2>Extra Stuff!</h2>
@@ -112,7 +162,7 @@
 						-->
 						<footer>
 							<ul class="icons">
-								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="nav()" >Check In</a></li>
+								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="checkin()" >Check In</a></li>
 							</ul>
 							<ul class="icons">
 								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="signOut()" >Sign Out</a></li>
