@@ -6,15 +6,25 @@
 
     `git clone https://github.com/anthonytongUCB/CandidateTracker.git`
 
-2. Select alias (might have to install some firebase stuff before using this command)
+2. Refer to documentation below to install firebase tools to use firebase commands
+
+    'https://firebase.google.com/docs/cli/'
+
+3. Select alias (might have to install some firebase stuff before using this command)
 
     `firebase use tracker`
 
-3. Launch
+4. Launch
    
     `firebase serve`
 
 
-4. Access application
+5. Access application
    
     `http://localhost:5000/`
+
+## Additional Info
+
+1. Refer to documentation for tag-it here; used in event sign in.
+	
+    'https://github.com/aehlke/tag-it'
