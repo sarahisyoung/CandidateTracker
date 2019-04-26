@@ -88,7 +88,7 @@
 		        if (result.credential) {
 		          // This gives you a Google Access Token. You can use it to access the Google API.
 		          var token = result.credential.accessToken;
-		          
+
 
 		          // [START_EXCLUDE]
 		          //document.getElementById('quickstart-oauthtoken').textContent = token;
@@ -215,30 +215,16 @@
 	            				var key = candidateAttribute.key;
 	            				var lineNum = 0;
 	            				if (candidateAttribute.val().length != 0
-	            						&& (key == "Mock Interview"
-									    || key == "Officer Chat 1"
-									    || key == "Officer Chat 2"
-									    || key == "Atlassian"
-									    || key == "Oracle"
-									    || key == "Jane Street"
-									    || key == "Interview Workshop"
-									    || key == "Splunk"
-									    || key == "Resume Workshop"
-									    || key == "Google Hashcode"
-									    || key == "Salesforce"
-									    || key == "Research Workshop"
-									    || key == "Accel"
-									    || key == "Negotiations"
-									    || key == "Women in EECS Panel"
-									    || key == "Glade Picnic"
-									    || key == "Palentine's"
-									    || key == "Bowling"
-									    || key == "Big Little Meet n Greet"
-									    || key == "rock climbing"
-									    || key == "board games"
-									    || key == "scav hunt"
-									    || key == "Berkeley Project"
-									    || key == "Challenge Finished")) {
+	            						&& (key != "Name"
+									    && key != "person type"
+									    && key != "GM2 Req Met?"
+										&& key != "Total"
+										&& key != "Email"
+										&& key != "Total Prof"
+									    && key != "Total Social"
+									    && key != "Total Officer Chat"
+									    && key != "Total Mock or Challenge")
+									) {
 
 		                			var line = document.createElement("p");
 		                			line.textContent = key + " ✓";

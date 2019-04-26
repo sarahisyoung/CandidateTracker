@@ -37,6 +37,8 @@
 		<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-database.js"></script>
 		<script src="/__/firebase/init.js"></script>
 		<script type="text/javascript">
+
+
 		function getParameterByName(name, url) {
 		    if (!url) url = window.location.href;
 		    name = name.replace(/[\[\]]/g, '\\$&');
@@ -46,10 +48,56 @@
 		    if (!results[2]) return '';
 		    return decodeURIComponent(results[2].replace(/\+/g, ' '));
 		}
-        function getName() {
-			var name = getParameterByName('name');
-			document.getElementById("name").textContent = "Event Check-in";
+        function check() {
+			firebase.auth().onAuthStateChanged(function(user) {
+				if (user == null) {
+					document.location.href = "error.html"
+					console.log("wtf");
+				} else {
+					console.log("right");
+					var db = firebase.database();
+		            var userEmail = user.email;
+		            var dbRef = db.ref();
+		            var str = "";
+					var role = 0;
+		            dbRef.once('value').then(function(snapshot) {
+
+
+		            	snapshot.forEach(function(candidateSnapshot) {
+		            		var candidate = candidateSnapshot.val();
+
+							if (candidate.Email === userEmail) {
+
+		            			candidateSnapshot.forEach(function(candidateAttribute) {
+
+		            				var key = candidateAttribute.key;
+		            				var lineNum = 0;
+		            				if (key == "person type") {
+										val = candidateAttribute.val();
+										role = val;
+										console.log("inside loop", val);
+			                		}
+		            			});
+
+		            		}
+
+		            	});
+						if (role == 0) {
+							console.log(role);
+							document.location.href = "index.html"
+						} else {
+							console.log("worked");
+							var name = getParameterByName('name');
+							document.getElementById("name").textContent = "Event Check-in";
+							addDrop()
+						}
+
+		            });
+
+				}
+			});
         }
+
 		function nav() {
 			window.location = "checkin.html";
 		}
@@ -58,40 +106,69 @@
 			document.location.href = "index.html";
 		}
 
+		function add() {
+			document.location.href = "events.html"
+		}
+
+		function addDrop() {
+			var select = document.getElementById("drop");
+			var db = firebase.database();
+			var dbRef = db.ref("Events/");
+			dbRef.once('value').then(function(snapshot) {
+
+				snapshot.forEach(function(candidateSnapshot) {
+					var event = candidateSnapshot.val();
+					var option = document.createElement('option');
+					option.text = option.value = event;
+					select.add(option, 0);
+				});
+
+			});
+
+		}
+
 		function checkin() {
+			var x = document.getElementById("form");
+            var value = x.elements[0].value;
+			console.log("outside", value);
+
+
 			lst = $("#myTags").tagit("assignedTags");
 			var db = firebase.database();
 
 			var dbRef = db.ref();
 			var str = "";
-
+			var updates = {};
 			dbRef.once('value').then(function(snapshot) {
 
-
+				var keys = Object.keys(snapshot.val());
 				var i;
+				count = 0;
 				for(i = 0; i < lst.length; i++) {
 					var userEmail = lst[i]
 					snapshot.forEach(function(candidateSnapshot) {
 						var candidate = candidateSnapshot.val();
-						console.log(Object.keys(candidate)[0]);
+						currid = keys[count];
+						count++;
 						if (candidate.Email === userEmail) {
 
 							candidateSnapshot.forEach(function(candidateAttribute) {
 
 								var key = candidateAttribute.key;
 								var lineNum = 0;
-								if (key == "Mock Interview") {
-									console.log("found")
-									candidateAttribute[key] = "x";
-
+								if (key == value) {
+									console.log(key);
+									console.log("found");
+									console.log(currid);
+									db.ref(currid + '/' + key).set("x");
 								}
-								console.log("exit");
 							});
 
 						}
 
 					});
 				}
+
 			});
 			$("#myTags").tagit("removeAll");
 		}
@@ -107,7 +184,8 @@
 			});
         </script>
 	</head>
-	<body class="is-preload" onload="getName()">
+
+	<body class="is-preload" onload="check()">
 
 		<!-- Wrapper -->
 			<div id="wrapper">
@@ -120,53 +198,33 @@
 							<p id="candidate-info"></p>
 
 						</header>
+						<hr />
+	                    <h2>Select Event</h2>
+	                    <form id="form" method="post" action="#">
+	                        <div class="fields">
+	                            <div class="field">
+	                                <select id="drop" name="Category" id="department">
+
+	                                </select>
+	                            </div>
+	                        </div>
+	                    </form>
+	                    <hr />
+
 						<ul id="myTags">
-						    <!-- Existing list items will be pre-added to the tags -->
+
 
 						</ul>
-						<!--
-						<hr />
-						<h2>Extra Stuff!</h2>
-						<form method="post" action="#">
-							<div class="fields">
-								<div class="field">
-									<input type="text" name="name" id="name" placeholder="Name" />
-								</div>
-								<div class="field">
-									<input type="email" name="email" id="email" placeholder="Email" />
-								</div>
-								<div class="field">
-									<select name="department" id="department">
-										<option value="">Department</option>
-										<option value="sales">Sales</option>
-										<option value="tech">Tech Support</option>
-										<option value="null">/dev/null</option>
-									</select>
-								</div>
-								<div class="field">
-									<textarea name="message" id="message" placeholder="Message" rows="4"></textarea>
-								</div>
-								<div class="field">
-									<input type="checkbox" id="human" name="human" /><label for="human">I'm a human</label>
-								</div>
-								<div class="field">
-									<label>But are you a robot?</label>
-									<input type="radio" id="robot_yes" name="robot" /><label for="robot_yes">Yes</label>
-									<input type="radio" id="robot_no" name="robot" /><label for="robot_no">No</label>
-								</div>
-							</div>
-							<ul class="actions special">
-								<li><a href="#" class="button">Get Started</a></li>
-							</ul>
-						</form>
-						<hr />
-						-->
+
 						<footer>
 							<ul class="icons">
 								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="checkin()" >Check In</a></li>
 							</ul>
 							<ul class="icons">
 								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="signOut()" >Sign Out</a></li>
+							</ul>
+							<ul class="icons">
+								<li id="quickstart-sign-in"><a href="#" class="signin" onclick="add()" >Add Event</a></li>
 							</ul>
 							<p id="disclaimer"></p>
 

@@ -15,16 +15,20 @@
     `firebase use tracker`
 
 4. Launch
-   
+
     `firebase serve`
 
 
 5. Access application
-   
+
     `http://localhost:5000/`
 
 ## Additional Info
 
 1. Refer to documentation for tag-it here; used in event sign in.
-	
+
     'https://github.com/aehlke/tag-it'
+
+## Notes
+
+1. Make sure on the firebase structure, the very first child/entry must be called "Events"
